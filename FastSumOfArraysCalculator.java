@@ -21,11 +21,11 @@ public class FastSumOfArraysCalculator{
         }
         List<Future<Long>> futures = executorService.invokeAll(tasks);
 
-        executorService.shutdown();
-
         for (Future<Long> future : futures) {
             totalResult = Long.sum(totalResult, future.get());
         }
+
+        executorService.shutdown();
 
         return totalResult;
     }
