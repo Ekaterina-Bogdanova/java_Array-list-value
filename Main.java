@@ -7,17 +7,12 @@ public class Main {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 
         List<int[]> arrayList = new ArrayListGenerator()
-                .createRandomArrayList(100, 2, 10, 1, 10);
+                .createRandomArrayList(3, 2, 10, 1, 10);
 
-        ArrayListHandler handler = new ArrayListHandler(arrayList);
-//        handler.displayArrayList();
+        FastSumOfArraysCalculator handler = new FastSumOfArraysCalculator(arrayList);
+        handler.displayArrayList();
 
         System.out.printf("Total result = %d\n", handler.getSumOfArraysValues());
-
-
-
-
-
 
     }
 
