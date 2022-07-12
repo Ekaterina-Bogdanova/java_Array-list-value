@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class ArrayListHandler{
+public class FastSumOfArraysCalculator{
     private List<int[]> arrayList;
 
-    public ArrayListHandler(List<int[]> arrayList) {
+    public FastSumOfArraysCalculator(List<int[]> arrayList) {
         this.arrayList = arrayList;
     }
 

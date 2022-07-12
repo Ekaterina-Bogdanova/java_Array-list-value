@@ -9,10 +9,11 @@ public class Main {
         List<int[]> arrayList = new ArrayListGenerator()
                 .createRandomArrayList(3, 2, 10, 1, 10);
 
-        ArrayListHandler handler = new ArrayListHandler(arrayList);
+        FastSumOfArraysCalculator handler = new FastSumOfArraysCalculator(arrayList);
         handler.displayArrayList();
 
         System.out.printf("Total result = %d\n", handler.getSumOfArraysValues());
+
     }
 
 }
