@@ -1,8 +1,8 @@
 package threads;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class ArrayListHandler{
     private List<int[]> arrayList;
@@ -11,34 +11,23 @@ public class ArrayListHandler{
         this.arrayList = arrayList;
     }
 
-    private long sumArrayValues(int[] array) {
-        AtomicLong sum = new AtomicLong(0);
-        for (int item : array) {
-            sum.addAndGet(item);
-//            System.out.printf("Work thread %s\n", Thread.currentThread().getName());
-        }
-        return sum.intValue();
-    }
-
-    public long getSumOfArraysValues() {
-        AtomicLong totalResult = new AtomicLong(0);
-        ExecutorService service = Executors.newCachedThreadPool();
+    public long getSumOfArraysValues() throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        List<Callable<Long>> tasks = new ArrayList<>();
+        long totalResult = 0;
 
         for (int [] array : arrayList) {
-            Future<Long> result = service.submit(() -> sumArrayValues(array));
-
-            try {
-                totalResult.addAndGet(result.get());
-//                System.out.println(totalResult);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+            tasks.add(new ArrayHandler(array));
         }
-        service.shutdown();
+        List<Future<Long>> futures = executorService.invokeAll(tasks);
 
-        return totalResult.get();
+        executorService.shutdown();
+
+        for (Future<Long> future : futures) {
+            totalResult = Long.sum(totalResult, future.get());
+        }
+
+        return totalResult;
     }
 
     public void displayArrayList() {
@@ -50,6 +39,24 @@ public class ArrayListHandler{
                 System.out.printf("%d\t", item);
             }
             System.out.println();
+        }
+    }
+
+    class ArrayHandler implements Callable<Long> {
+        private int [] array;
+
+        ArrayHandler(int [] array ){
+            this.array = array;
+        }
+
+        @Override
+        public Long call() throws Exception {
+            long sum = 0;
+            for (int item : array) {
+                sum = Long.sum(sum, item);
+                System.out.printf("Work thread %s\n", Thread.currentThread().getName());
+            }
+            return sum;
         }
     }
 
